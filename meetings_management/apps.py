@@ -8,3 +8,6 @@ class MeetingsManagementConfig(AppConfig):
     name = 'meetings_management'
     label = 'meetings_management'
     verbose_name = _('Meetings Management')
+
+    def ready(self):
+        import meetings_management.signals  # NOQA
