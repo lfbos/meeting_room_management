@@ -34,3 +34,27 @@ class MeetingRoom(BaseMixin):
     class Meta:
         verbose_name = _('meeting room')
         verbose_name_plural = _('meeting rooms')
+
+
+class MeetingRoomUser(BaseMixin):
+    ROLE_EMPLOYEE = 0
+    ROLE_ADMIN = 1
+    ROLES = (
+        (ROLE_EMPLOYEE, _('Employee')),
+        (ROLE_ADMIN, _('Administrator'))
+    )
+
+    user = models.OneToOneField(
+        'auth.User',
+        related_name='meeting_room_user'
+    )
+
+    role = models.PositiveSmallIntegerField(
+        default=ROLE_EMPLOYEE,
+        choices=ROLES,
+        verbose_name=_('Role')
+    )
+
+    class Meta:
+        verbose_name = _('meeting room user')
+        verbose_name_plural = _('meeting room users')
