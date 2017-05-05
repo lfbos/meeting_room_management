@@ -1,0 +1,123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-05 18:52-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: core/mixins.py:14
+msgid "metadata"
+msgstr "metadatos"
+
+#: core/mixins.py:19
+msgid "date and time of creation"
+msgstr "fecha y hora de creación"
+
+#: core/mixins.py:23
+msgid "date and time of last update"
+msgstr "fecha y hora de la última actualización"
+
+#: meetings_management/models.py:13
+msgid "name"
+msgstr "nombre"
+
+#: meetings_management/models.py:14
+msgid "location"
+msgstr "ubicación"
+
+#: meetings_management/models.py:15
+msgid "capacity"
+msgstr "capacidad"
+
+#: meetings_management/models.py:18
+msgid "available from"
+msgstr "disponible desde"
+
+#: meetings_management/models.py:22
+msgid "available until"
+msgstr "disponible hasta"
+
+#: meetings_management/models.py:27
+msgid "Add supplies separated by comma"
+msgstr "Añadir insumos separados por coma"
+
+#: meetings_management/models.py:28
+msgid "supplies"
+msgstr "insumos"
+
+#: meetings_management/models.py:35
+msgid "meeting room"
+msgstr "sala de reuniones"
+
+#: meetings_management/models.py:36
+msgid "meeting rooms"
+msgstr "salas de reuniones"
+
+#: meetings_management/models.py:43
+msgid "Employee"
+msgstr "Empleado"
+
+#: meetings_management/models.py:44
+msgid "Administrator"
+msgstr "Administrador"
+
+#: meetings_management/models.py:55
+msgid "Role"
+msgstr "Rol"
+
+#: meetings_management/models.py:59
+msgid "meeting room user"
+msgstr "usuario"
+
+#: meetings_management/models.py:60
+msgid "meeting room users"
+msgstr "usuario"
+
+#: meetings_management/models.py:74
+msgid "reserved from"
+msgstr "reservado desde"
+
+#: meetings_management/models.py:75
+msgid "reserved until"
+msgstr "reservado hasta"
+
+#: meetings_management/models.py:76
+msgid "amount of people"
+msgstr "cantidad de personas"
+
+#: meetings_management/models.py:80
+msgid "supplies to use"
+msgstr "insumos a utilizar"
+
+#: meetings_management/models.py:91
+msgid "meeting room reservation"
+msgstr "reservación"
+
+#: meetings_management/models.py:92
+msgid "meeting room reservations"
+msgstr "reservaciones"
+
+#: meetings_management/models.py:100
+msgid "user message"
+msgstr "mensaje del usuario"
+
+#: meetings_management/models.py:112
+msgid "user request"
+msgstr "solicitud de usuario"
+
+#: meetings_management/models.py:113
+msgid "user requests"
+msgstr "solicitudes de usuario"
