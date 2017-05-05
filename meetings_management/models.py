@@ -58,3 +58,36 @@ class MeetingRoomUser(BaseMixin):
     class Meta:
         verbose_name = _('meeting room user')
         verbose_name_plural = _('meeting room users')
+
+
+class MeetingRoomReservation(BaseMixin):
+    meeting_room = models.ForeignKey(
+        'MeetingRoom',
+        related_name='reservations'
+    )
+
+    user = models.ForeignKey(
+        'MeetingRoomUser',
+        related_name='reservations'
+    )
+
+    reserved_from = models.TimeField(verbose_name=_('reserved from'))
+    reserved_until = models.TimeField(verbose_name=_('reserved until'))
+    amount = models.IntegerField(verbose_name=_('amount of people'))
+    supplies = ArrayField(
+        models.CharField(max_length=64),
+        blank=True,
+        verbose_name=_('supplies to use')
+    )
+
+    def __str__(self):
+        return "{} - {} {}".format(
+            self.meeting_room.name,
+            self.user.user.first_name,
+            self.user.user.last_name
+        )
+
+    class Meta:
+        verbose_name = _('meeting room reservation')
+        verbose_name_plural = _('meeting room reservations')
+
