@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-05 18:52-0300\n"
+"POT-Creation-Date: 2017-05-05 19:30-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,10 @@ msgstr "fecha y hora de creación"
 #: core/mixins.py:23
 msgid "date and time of last update"
 msgstr "fecha y hora de la última actualización"
+
+#: meetings_management/apps.py:10
+msgid "Meetings Management"
+msgstr "Gestión de Reuniones"
 
 #: meetings_management/models.py:13
 msgid "name"
