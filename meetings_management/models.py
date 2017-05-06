@@ -71,8 +71,8 @@ class MeetingRoomReservation(BaseMixin):
         related_name='reservations'
     )
 
-    reserved_from = models.TimeField(verbose_name=_('reserved from'))
-    reserved_until = models.TimeField(verbose_name=_('reserved until'))
+    reserved_from = models.DateTimeField(verbose_name=_('reserved from'))
+    reserved_until = models.DateTimeField(verbose_name=_('reserved until'))
     amount = models.IntegerField(verbose_name=_('amount of people'))
     supplies = ArrayField(
         models.CharField(max_length=64),
