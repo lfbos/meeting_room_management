@@ -2,9 +2,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
+from django.views import View
 from django.views.generic import TemplateView, FormView
 
-from meetings_management.forms import EditRoomForm, LoginForm, NewRoomForm
+from meetings_management.forms import LoginForm, NewRoomForm
 from meetings_management.models import (
     MeetingRoom,
     MeetingRoomReservation,
@@ -13,7 +14,7 @@ from meetings_management.models import (
 )
 
 
-class AdminBaseView(LoginRequiredMixin, TemplateView):
+class AdminBaseView(LoginRequiredMixin, View):
     login_url = '/app/login/'
     role = None
 
@@ -29,9 +30,10 @@ class AdminBaseView(LoginRequiredMixin, TemplateView):
                         1: "Administrador"
                     }[meeting_room_user.role],
                     self.request.user.get_full_name() or self.request.user.username
-                )
+                ),
+                'rooms': MeetingRoom.objects.all()
             })
-        return super(TemplateView, self).get_context_data(**kwargs)
+        return super(AdminBaseView, self).get_context_data(**kwargs)
 
     class Meta:
         abstract = True
@@ -63,20 +65,11 @@ class LoginView(FormView):
         })
 
 
-class IndexView(AdminBaseView):
+class IndexView(AdminBaseView, TemplateView):
     template_name = 'meetings_management/index.html'
-    rooms = MeetingRoom.objects.all()
-
-    def get_context_data(self, **kwargs):
-        kwargs = super(IndexView, self).get_context_data(**kwargs)
-        kwargs.update({
-            'rooms': self.rooms
-        })
-
-        return kwargs
 
 
-class ReservationsView(AdminBaseView):
+class ReservationsView(AdminBaseView, TemplateView):
     template_name = 'meetings_management/reservations.html'
     reservations = None
 
@@ -93,7 +86,7 @@ class ReservationsView(AdminBaseView):
         return kwargs
 
 
-class RequestsView(AdminBaseView):
+class RequestsView(AdminBaseView, TemplateView):
     template_name = 'meetings_management/requests.html'
     requests = None
 
@@ -110,7 +103,7 @@ class RequestsView(AdminBaseView):
         return kwargs
 
 
-class UsersView(AdminBaseView):
+class UsersView(AdminBaseView, TemplateView):
     template_name = 'meetings_management/users.html'
     users = None
 
@@ -124,14 +117,45 @@ class UsersView(AdminBaseView):
         return kwargs
 
 
-class NewMeetingRoomView(FormView):
+class NewMeetingRoomView(AdminBaseView, FormView):
     template_name = 'meetings_management/new_room.html'
     form_class = NewRoomForm
+    success_url = '/'
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        data['supplies'] = data['supplies'].split(',')
+
+        room = MeetingRoom.objects.create(**data)
+        room.refresh_from_db()
+        room.save()
+
+        return super(NewMeetingRoomView, self).form_valid(form)
 
 
-class EditMeetingRoomView(FormView):
+class EditMeetingRoomView(AdminBaseView, FormView):
     template_name = 'meetings_management/edit_room.html'
-    form_class = EditRoomForm
+    form_class = NewRoomForm
+    success_url = '/'
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(EditMeetingRoomView, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        current_room = MeetingRoom.objects.get(pk=pk)
+        kwargs.update({
+            'current_room': current_room
+        })
+
+        return kwargs
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        data['supplies'] = data['supplies'].split(',')
+
+        pk = self.kwargs.get('pk')
+        MeetingRoom.objects.filter(pk=pk).update(**data)
+
+        return super(EditMeetingRoomView, self).form_valid(form)
 
 
 def signout(request):
