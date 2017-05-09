@@ -76,6 +76,54 @@ class IndexView(AdminBaseView):
         return kwargs
 
 
+class ReservationsView(AdminBaseView):
+    template_name = 'meetings_management/reservations.html'
+    reservations = None
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(ReservationsView, self).get_context_data(**kwargs)
+        self.reservations = MeetingRoomReservation.objects.all() \
+            if self.request.user.meeting_room_user.role == 1 \
+            else self.request.user.meeting_room_user.reservations
+
+        kwargs.update({
+            'reservations': self.reservations
+        })
+
+        return kwargs
+
+
+class RequestsView(AdminBaseView):
+    template_name = 'meetings_management/requests.html'
+    requests = None
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(RequestsView, self).get_context_data(**kwargs)
+        self.requests = MeetingRoomRequest.objects.all() \
+            if self.request.user.meeting_room_user.role == 1 \
+            else self.request.user.meeting_room_user.requests
+
+        kwargs.update({
+            'requests': self.requests
+        })
+
+        return kwargs
+
+
+class UsersView(AdminBaseView):
+    template_name = 'meetings_management/users.html'
+    users = None
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(UsersView, self).get_context_data(**kwargs)
+        if self.request.user.meeting_room_user.role == 1:
+            kwargs.update({
+                'users': MeetingRoomUser.objects.all()
+            })
+
+        return kwargs
+
+
 def signout(request):
     logout(request)
     return redirect('app:login')
