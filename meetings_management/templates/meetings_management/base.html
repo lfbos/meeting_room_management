@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Gestión Salas de Reuniones</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'meetings_management/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'meetings_management/css/sb-admin.css' %}" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="{% static 'meetings_management/css/plugins/morris.css' %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{% static 'meetings_management/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
+          type="text/css">
+
+    {% block styles %}
+    {% endblock %}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'app:index' %}">Gestión de Salones</a>
+        </div>
+        <!-- Top Menu Items -->
+        <ul class="nav navbar-right top-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b
+                        class="caret"></b></a>
+                <ul class="dropdown-menu message-dropdown">
+                    <li class="message-preview">
+                        <a href="#">
+                            <div class="media">
+                                <div class="media-body">
+                                    <h5 class="media-heading"><strong>John Smith1</strong>
+                                    </h5>
+                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="message-preview">
+                        <a href="#">
+                            <div class="media">
+                                <div class="media-body">
+                                    <h5 class="media-heading"><strong>John Smith2</strong>
+                                    </h5>
+                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="message-preview">
+                        <a href="#">
+                            <div class="media">
+                                <div class="media-body">
+                                    <h5 class="media-heading"><strong>John Smith3</strong>
+                                    </h5>
+                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="message-footer">
+                        <a href="#">Ver todas las solicitudes</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ username }} <b
+                        class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url 'app:logout' %}"><i class="fa fa-fw fa-power-off"></i> Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav side-nav" id="links">
+                <li id="indexview">
+                    <a href="{% url 'app:index' %}"><i class="fa fa-fw fa-briefcase"></i> Salones</a>
+                </li>
+                <li id="reservationsview">
+                    <a href="{% url 'app:reservations' %}"><i class="fa fa-fw fa-calendar"></i> Reservaciones</a>
+                </li>
+                <li id="requestsview">
+                    <a href="{% url 'app:requests' %}"><i class="fa fa-fw fa-inbox"></i> Solicitudes</a>
+                </li>
+                <li id="usersview">
+                    <a href="{% url 'app:users' %}"><i class="fa fa-fw fa-users"></i> Usuarios</a>
+                </li>
+                <li>
+                    <a href="{% url 'app:logout' %}"><i class="fa fa-fw fa-power-off"></i> Cerrar Sesión</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+    <div id="page-wrapper">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- jQuery -->
+<script src="{% static 'meetings_management/js/jquery.js' %}"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="{% static 'meetings_management/js/bootstrap.min.js' %}"></script>
+
+<!-- Morris Charts JavaScript -->
+<script src="{% static 'meetings_management/js/plugins/morris/raphael.min.js' %}"></script>
+<script src="{% static 'meetings_management/js/plugins/morris/morris.min.js' %}"></script>
+<script src="{% static 'meetings_management/js/plugins/morris/morris-data.js' %}"></script>
+
+<script>
+    $.each($("#links").find("li"), function(index, value) {
+        $(value).removeClass('active');
+    });
+
+    $("#{{ view_id }}").addClass('active');
+    console.log("{{ view_id }}");
+</script>
+{% block scripts %}
+{% endblock %}
+
+</body>
+
+</html>
