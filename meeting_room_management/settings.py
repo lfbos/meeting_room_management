@@ -122,3 +122,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOCALE_PATHS = ('locale',)
+
+LOGOUT_REDIRECT_URL = '/app/login/'
