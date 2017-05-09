@@ -84,11 +84,11 @@ msgstr "Rol"
 
 #: meetings_management/models.py:59
 msgid "meeting room user"
-msgstr "usuario"
+msgstr "usuario del portal"
 
 #: meetings_management/models.py:60
 msgid "meeting room users"
-msgstr "usuario"
+msgstr "usuarios del portal"
 
 #: meetings_management/models.py:74
 msgid "reserved from"
