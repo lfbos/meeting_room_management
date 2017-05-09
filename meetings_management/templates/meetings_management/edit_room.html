@@ -1,0 +1,113 @@
+{% extends 'meetings_management/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <!-- Bootstrap DateTime -->
+    <link href="{% static 'meetings_management/css/plugins/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Editar Salón de Reuniones
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-briefcase"></i> <a href="{% url 'app:index' %}">Salones</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-edit"></i> Editar salón
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="col-lg-12 col-md-12">
+            <h1>Editar Salón de Reuniones</h1>
+
+            <form id="edit_form" style="width: 60%;" role="form" action="{% url 'app:edit-meeting-room' current_room.pk %}"
+                  method="POST"> {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {{ form.name.errors }}
+                    <label class="control-label" for="{{ form.name.id_for_label }}">Nombre</label>
+                    {{ form.name }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.location.errors }}
+                    <label class="control-label" for="{{ form.location.id_for_label }}">Ubicación</label>
+                    {{ form.location }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.capacity.errors }}
+                    <label class="control-label" for="{{ form.capacity.id_for_label }}">Capacidad</label>
+                    {{ form.capacity }}
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <label for="{{ form.available_from.id_for_label }}" class="control-label">Disponible
+                                desde: </label>
+                            {{ form.available_from }}
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <label for="{{ form.available_until.id_for_label }}" class="control-label">hasta: </label>
+                            {{ form.available_until }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form.supplies.errors }}
+                    <label for="" class="control-label">Insumos</label>
+                    {{ form.supplies }}
+                </div>
+
+                <hr>
+
+                <button class="btn btn-primary" type="submit">Editar</button>
+            </form>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block scripts %}
+
+    <!-- Load MomentJS -->
+    <script src="{% static 'meetings_management/js/plugins/moment.min.js' %}"></script>
+
+    <!-- Boostrap Datetime -->
+    <script src="{% static 'meetings_management/js/plugins/bootstrap-datetimepicker.min.js' %}"></script>
+
+    <script>
+        var from = moment("{{ current_room.available_from.isoformat}}");
+        var until = moment("{{ current_room.available_until.isoformat}}");
+
+
+        $("#id_name").val("{{ current_room.name }}");
+        $("#id_location").val("{{ current_room.location }}");
+        $("#id_capacity").val("{{ current_room.capacity }}");
+
+        $("#available_from").datetimepicker({
+            defaultDate: from,
+            format: 'YYYY-MM-DD hh:mm:ss'
+        });
+        $("#available_until").datetimepicker({
+            defaultDate: until,
+            format: 'YYYY-MM-DD hh:mm:ss'
+        });
+
+        $("#id_supplies").val("{{ current_room.supplies|join:"," }}");
+
+    </script>
+{% endblock %}
