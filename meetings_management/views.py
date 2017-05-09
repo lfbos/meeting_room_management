@@ -124,6 +124,16 @@ class UsersView(AdminBaseView):
         return kwargs
 
 
+class NewMeetingRoomView(FormView):
+    template_name = 'meetings_management/new_room.html'
+    form_class = NewRoomForm
+
+
+class EditMeetingRoomView(FormView):
+    template_name = 'meetings_management/edit_room.html'
+    form_class = EditRoomForm
+
+
 def signout(request):
     logout(request)
     return redirect('app:login')
