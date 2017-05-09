@@ -55,6 +55,15 @@ class MeetingRoomUser(BaseMixin):
         verbose_name=_('Role')
     )
 
+    def __str__(self):
+        return "{} - {}".format(
+            {
+                0: _("Employee"),
+                1: _("Administrator")
+            }[self.role],
+            self.user.get_full_name() or self.user.username
+        )
+
     class Meta:
         verbose_name = _('meeting room user')
         verbose_name_plural = _('meeting room users')
@@ -93,7 +102,10 @@ class MeetingRoomReservation(BaseMixin):
 
 
 class MeetingRoomRequest(BaseMixin):
-    to_user = models.OneToOneField('MeetingRoomUser')
+    to_user = models.OneToOneField(
+        'MeetingRoomUser',
+        related_name='user_requests'
+    )
     room = models.OneToOneField('MeetingRoom')
     message = models.CharField(
         max_length=128,
