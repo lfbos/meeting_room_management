@@ -14,6 +14,9 @@
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'meetings_management/css/bootstrap.min.css' %}" rel="stylesheet">
 
+    <!-- Bootstrap Input Tags -->
+    <link href="{% static 'meetings_management/css/plugins/bootstrap-tagsinput.css' %}" rel="stylesheet">
+
     <!-- Custom CSS -->
     <link href="{% static 'meetings_management/css/sb-admin.css' %}" rel="stylesheet">
 
@@ -112,18 +115,22 @@
         <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav" id="links">
+                {% if role == 1 %}
                 <li id="indexview">
                     <a href="{% url 'app:index' %}"><i class="fa fa-fw fa-briefcase"></i> Salones</a>
                 </li>
+                {% endif %}
                 <li id="reservationsview">
                     <a href="{% url 'app:reservations' %}"><i class="fa fa-fw fa-calendar"></i> Reservaciones</a>
                 </li>
                 <li id="requestsview">
                     <a href="{% url 'app:requests' %}"><i class="fa fa-fw fa-inbox"></i> Solicitudes</a>
                 </li>
+                {% if role == 1 %}
                 <li id="usersview">
                     <a href="{% url 'app:users' %}"><i class="fa fa-fw fa-users"></i> Usuarios</a>
                 </li>
+                {% endif %}
                 <li>
                     <a href="{% url 'app:logout' %}"><i class="fa fa-fw fa-power-off"></i> Cerrar Sesión</a>
                 </li>
@@ -147,6 +154,9 @@
 <!-- Bootstrap Core JavaScript -->
 <script src="{% static 'meetings_management/js/bootstrap.min.js' %}"></script>
 
+<!-- Bootstrap Input Tags JS -->
+<script src="{% static 'meetings_management/js/plugins/bootstrap-tagsinput.min.js' %}"></script>
+
 <!-- Morris Charts JavaScript -->
 <script src="{% static 'meetings_management/js/plugins/morris/raphael.min.js' %}"></script>
 <script src="{% static 'meetings_management/js/plugins/morris/morris.min.js' %}"></script>
@@ -158,7 +168,6 @@
     });
 
     $("#{{ view_id }}").addClass('active');
-    console.log("{{ view_id }}");
 </script>
 {% block scripts %}
 {% endblock %}
