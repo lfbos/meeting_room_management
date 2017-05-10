@@ -33,6 +33,8 @@
 
 * Migrar a la base de datos `python manage.py migrate`
 
+* Compilar traducciones `python manage.py compilemessages -l es`
+
 * Crear super usuario `python manage.py createsuperuser`
 
 * Ejecutar e ir a [http://localhost:8000/admin](http://localhost:8000/admin)
