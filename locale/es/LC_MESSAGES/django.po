@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-05 19:30-0300\n"
+"POT-Creation-Date: 2017-05-10 18:51-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,11 +70,11 @@ msgstr "sala de reuniones"
 msgid "meeting rooms"
 msgstr "salas de reuniones"
 
-#: meetings_management/models.py:43
+#: meetings_management/models.py:43 meetings_management/models.py:61
 msgid "Employee"
 msgstr "Empleado"
 
-#: meetings_management/models.py:44
+#: meetings_management/models.py:44 meetings_management/models.py:62
 msgid "Administrator"
 msgstr "Administrador"
 
@@ -82,46 +82,62 @@ msgstr "Administrador"
 msgid "Role"
 msgstr "Rol"
 
-#: meetings_management/models.py:59
+#: meetings_management/models.py:68
 msgid "meeting room user"
 msgstr "usuario del portal"
 
-#: meetings_management/models.py:60
+#: meetings_management/models.py:69
 msgid "meeting room users"
 msgstr "usuarios del portal"
 
-#: meetings_management/models.py:74
+#: meetings_management/models.py:83
 msgid "reserved from"
 msgstr "reservado desde"
 
-#: meetings_management/models.py:75
+#: meetings_management/models.py:84
 msgid "reserved until"
 msgstr "reservado hasta"
 
-#: meetings_management/models.py:76
+#: meetings_management/models.py:85 meetings_management/models.py:136
 msgid "amount of people"
 msgstr "cantidad de personas"
 
-#: meetings_management/models.py:80
+#: meetings_management/models.py:89 meetings_management/models.py:141
 msgid "supplies to use"
 msgstr "insumos a utilizar"
 
-#: meetings_management/models.py:91
+#: meetings_management/models.py:94
+msgid "reservation confirmed"
+msgstr "reservación confirmada"
+
+#: meetings_management/models.py:104
 msgid "meeting room reservation"
 msgstr "reservación"
 
-#: meetings_management/models.py:92
+#: meetings_management/models.py:105
 msgid "meeting room reservations"
 msgstr "reservaciones"
 
-#: meetings_management/models.py:100
+#: meetings_management/models.py:125
 msgid "user message"
 msgstr "mensaje del usuario"
 
-#: meetings_management/models.py:112
+#: meetings_management/models.py:129
+#, fuzzy
+#| msgid "reserved from"
+msgid "need to reserve from"
+msgstr "reservado desde"
+
+#: meetings_management/models.py:133
+#, fuzzy
+#| msgid "reserved until"
+msgid "need to reserve until"
+msgstr "reservado hasta"
+
+#: meetings_management/models.py:151
 msgid "user request"
 msgstr "solicitud de usuario"
 
-#: meetings_management/models.py:113
+#: meetings_management/models.py:152
 msgid "user requests"
 msgstr "solicitudes de usuario"
