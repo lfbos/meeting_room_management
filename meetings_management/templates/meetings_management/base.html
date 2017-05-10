@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,9 +18,6 @@
 
     <!-- Custom CSS -->
     <link href="{% static 'meetings_management/css/sb-admin.css' %}" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="{% static 'meetings_management/css/plugins/morris.css' %}" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="{% static 'meetings_management/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
@@ -61,45 +57,72 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b
                         class="caret"></b></a>
                 <ul class="dropdown-menu message-dropdown">
-                    <li class="message-preview">
-                        <a href="#">
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="media-heading"><strong>John Smith1</strong>
-                                    </h5>
-                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="message-preview">
-                        <a href="#">
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="media-heading"><strong>John Smith2</strong>
-                                    </h5>
-                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="message-preview">
-                        <a href="#">
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="media-heading"><strong>John Smith3</strong>
-                                    </h5>
-                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="message-footer">
-                        <a href="#">Ver todas las solicitudes</a>
-                    </li>
+                    {% if role == 0 %}
+                        {# Employee #}
+                        {% if user_requests.count > 0 %}
+                            {% for user_request in user_requests %}
+                                <li class="message-preview">
+                                    <a href="{% url "app:requests" %}">
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <h5 class="media-heading">
+                                                    <strong>De:
+                                                        {% if user_request.to_user.user.get_full_name %}
+                                                            {{ user_request.to_user.user.get_full_name }}
+                                                        {% else %}
+                                                            {{ user_request.to_user.user.username }}
+                                                        {% endif %}
+                                                    </strong>
+                                                </h5>
+                                                <p class="small text-muted"><i
+                                                        class="fa fa-clock-o"></i> {{ user_request.created|date:"SHORT_DATETIME_FORMAT" }}
+                                                </p>
+                                                <p>Solicitud para ceder salón "{{ user_request.reservation.meeting_room.name }}"</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="message-footer">
+                                <a>No posee ninguna solicitud</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        {# Administrador #}
+                        {% if user_reservations.count == 0 %}
+                            <li class="message-footer">
+                                <a>No han realizado ninguna reservación</a>
+                            </li>
+                        {% elif reservations.count > 0 %}
+                            {% for user_reservation in user_reservations %}
+                                <li class="message-preview">
+                                    <a href="{% url 'app:edit-reservation' user_reservation.pk %}">
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <h5 class="media-heading">
+                                                    <strong>De:
+                                                        {% if user_reservation.user.user.get_full_name %}
+                                                            {{ user_reservation.user.user.get_full_name }}
+                                                        {% else %}
+                                                            {{ user_reservation.user.user.username }}
+                                                        {% endif %}
+                                                    </strong>
+                                                </h5>
+                                                <p class="small text-muted"><i
+                                                        class="fa fa-clock-o"></i> {{ user_reservation.created|date:"SHORT_DATETIME_FORMAT" }}
+                                                </p>
+                                                <h4>{{ user_reservation.meeting_room }}</h4>
+                                                <p>Reservación solicitada para
+                                                    el {{ user_reservation.reserved_from|date:"SHORT_DATETIME_FORMAT" }},
+                                                    hasta {{ user_reservation.reserved_until|date:"SHORT_DATETIME_FORMAT" }}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
                 </ul>
             </li>
             <li class="dropdown">
@@ -115,21 +138,23 @@
         <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav" id="links">
-                {% if role == 1 %}
                 <li id="indexview">
-                    <a href="{% url 'app:index' %}"><i class="fa fa-fw fa-briefcase"></i> Salones</a>
-                </li>
-                {% endif %}
-                <li id="reservationsview">
-                    <a href="{% url 'app:reservations' %}"><i class="fa fa-fw fa-calendar"></i> Reservaciones</a>
-                </li>
-                <li id="requestsview">
-                    <a href="{% url 'app:requests' %}"><i class="fa fa-fw fa-inbox"></i> Solicitudes</a>
+                    <a href="{% url 'app:index' %}"><i class="fa fa-fw fa-briefcase"></i> Reservaciones</a>
                 </li>
                 {% if role == 1 %}
-                <li id="usersview">
-                    <a href="{% url 'app:users' %}"><i class="fa fa-fw fa-users"></i> Usuarios</a>
-                </li>
+                    <li id="roomsview">
+                        <a href="{% url 'app:rooms' %}"><i class="fa fa-fw fa-calendar"></i> Salones</a>
+                    </li>
+                {% endif %}
+                {% if role == 0 %}
+                    <li id="requestsview">
+                        <a href="{% url 'app:requests' %}"><i class="fa fa-fw fa-inbox"></i> Solicitudes</a>
+                    </li>
+                {% endif %}
+                {% if role == 1 %}
+                    <li id="usersview">
+                        <a href="{% url 'app:users' %}"><i class="fa fa-fw fa-users"></i> Usuarios</a>
+                    </li>
                 {% endif %}
                 <li>
                     <a href="{% url 'app:logout' %}"><i class="fa fa-fw fa-power-off"></i> Cerrar Sesión</a>
@@ -157,13 +182,8 @@
 <!-- Bootstrap Input Tags JS -->
 <script src="{% static 'meetings_management/js/plugins/bootstrap-tagsinput.min.js' %}"></script>
 
-<!-- Morris Charts JavaScript -->
-<script src="{% static 'meetings_management/js/plugins/morris/raphael.min.js' %}"></script>
-<script src="{% static 'meetings_management/js/plugins/morris/morris.min.js' %}"></script>
-<script src="{% static 'meetings_management/js/plugins/morris/morris-data.js' %}"></script>
-
 <script>
-    $.each($("#links").find("li"), function(index, value) {
+    $.each($("#links").find("li"), function (index, value) {
         $(value).removeClass('active');
     });
 
