@@ -16,7 +16,7 @@
                 </h1>
                 <ol class="breadcrumb">
                     <li>
-                        <i class="fa fa-briefcase"></i> <a href="{% url 'app:index' %}">Salones</a>
+                        <i class="fa fa-briefcase"></i> <a href="{% url 'app:rooms' %}">Salones</a>
                     </li>
                     <li class="active">
                         <i class="fa fa-edit"></i> Nuevo salón
@@ -93,13 +93,13 @@
         var from = moment().hours(6).minutes(0).seconds(0);
         var until = moment().hours(21).minutes(0).seconds(0);
 
-        $("#available_from").datetimepicker({
+        $("#id_available_from").datetimepicker({
             defaultDate: from,
-            format: 'YYYY-MM-DD hh:mm:ss'
+            format: 'YYYY-MM-DD HH:mm:ss'
         });
-        $("#available_until").datetimepicker({
+        $("#id_available_until").datetimepicker({
             defaultDate: until,
-            format: 'YYYY-MM-DD hh:mm:ss'
+            format: 'YYYY-MM-DD HH:mm:ss'
         });
 
     </script>

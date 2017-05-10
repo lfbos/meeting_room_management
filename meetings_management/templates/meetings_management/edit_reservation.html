@@ -1,0 +1,160 @@
+{% extends 'meetings_management/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <!-- Bootstrap DateTime -->
+    <link href="{% static 'meetings_management/css/plugins/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Editar reservación
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-calendar"></i> <a href="{% url 'app:index' %}">Reservaciones</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-edit"></i> Editar reservación
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="col-lg-12 col-md-12">
+            <h1>Editar Reservación</h1>
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    <strong>{{ error }}</strong>
+                </div>
+            {% endif %}
+
+            {% if warning %}
+                <div class="alert alert-warning">
+                    <strong>{{ warning }}</strong>
+                </div>
+            {% endif %}
+
+            <form style="width: 60%;" role="form" action="{% url 'app:edit-reservation' current_reservation.pk %}"
+                  method="POST"> {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {{ form.meeting_room.errors }}
+                    <label class="control-label" for="{{ form.meeting_room.id_for_label }}">Seleccione el salón</label>
+                    {{ form.meeting_room }}
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <label for="{{ form.reserved_from.id_for_label }}" class="control-label">Reservar
+                                desde: </label>
+                            {{ form.reserved_from }}
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <label for="{{ form.reserved_until.id_for_label }}" class="control-label">hasta: </label>
+                            {{ form.reserved_until }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form.amount.errors }}
+                    <label for="{{ form.amount.id_for_label }}" class="control-label">Cantidad de personas</label>
+                    {{ form.amount }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.supplies.errors }}
+                    <label for="{{ form.supplies.id_for_label }}" class="control-label">Insumos</label>
+                    {{ form.supplies }}
+                </div>
+
+                <div class="checkbox">
+                    {{ form.confirmed.errors }}
+                    <label for="{{ form.confirmed.id_for_label }}">
+                        {{ form.confirmed }} <b>Confirmar</b>
+                    </label>
+
+                </div>
+
+                <hr>
+
+                <button class="btn btn-primary" type="submit">Editar</button>
+                <a href="{% url 'app:delete-reservation' current_reservation.pk %}" style="float: right;" class="btn btn-danger">Eliminar</a>
+            </form>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block scripts %}
+
+    <!-- Load MomentJS -->
+    <script src="{% static 'meetings_management/js/plugins/moment.min.js' %}"></script>
+
+    <!-- Boostrap Datetime -->
+    <script src="{% static 'meetings_management/js/plugins/bootstrap-datetimepicker.min.js' %}"></script>
+
+    <script>
+        var from = moment("{{ current_reservation.reserved_from.isoformat}}");
+        var until = moment("{{ current_reservation.reserved_until.isoformat}}");
+
+        var suppliesList = JSON.parse("{{ supplies_list|escapejs }}");
+
+        $("#id_meeting_room").val("{{ current_reservation.meeting_room.pk }}");
+
+        var supplies = suppliesList.find(function (s) {
+            return s.pk === "{{ current_reservation.meeting_room.pk }}";
+        });
+
+        if (supplies.list.length > 0) {
+            $('#id_supplies').find('option').remove().end();
+            $.each(supplies.list, function (key, value) {
+                $('#id_supplies')
+                    .append($("<option></option>")
+                        .attr("value", value).text(value));
+            });
+        }
+
+        $("#id_amount").val("{{ current_reservation.amount }}");
+
+        $("#id_reserved_from").datetimepicker({
+            defaultDate: from,
+            format: 'YYYY-MM-DD HH:mm:ss'
+        });
+
+        $("#id_reserved_until").datetimepicker({
+            defaultDate: until,
+            format: 'YYYY-MM-DD HH:mm:ss'
+        });
+
+        var suppliesList = JSON.parse("{{ supplies_list|escapejs }}");
+
+        $("#id_meeting_room").on('change', function (e) {
+            if (e.target.value) {
+                var supplies = suppliesList.find(function (s) {
+                    return s.pk === e.target.value;
+                });
+
+                if (supplies.list.length > 0) {
+                    $('#id_supplies').find('option').remove().end();
+                    $.each(supplies.list, function (key, value) {
+                        $('#id_supplies')
+                            .append($("<option></option>")
+                                .attr("value", value).text(value));
+                    });
+                }
+            }
+        });
+
+    </script>
+{% endblock %}

@@ -16,7 +16,7 @@
                 </h1>
                 <ol class="breadcrumb">
                     <li>
-                        <i class="fa fa-briefcase"></i> <a href="{% url 'app:index' %}">Salones</a>
+                        <i class="fa fa-briefcase"></i> <a href="{% url 'app:rooms' %}">Salones</a>
                     </li>
                     <li class="active">
                         <i class="fa fa-edit"></i> Editar salón
@@ -73,6 +73,7 @@
                 <hr>
 
                 <button class="btn btn-primary" type="submit">Editar</button>
+                <a href="{% url 'app:delete-meeting-room' current_room.pk %}" style="float: right;" class="btn btn-danger">Eliminar</a>
             </form>
         </div>
 
@@ -98,13 +99,13 @@
         $("#id_location").val("{{ current_room.location }}");
         $("#id_capacity").val("{{ current_room.capacity }}");
 
-        $("#available_from").datetimepicker({
+        $("#id_available_from").datetimepicker({
             defaultDate: from,
-            format: 'YYYY-MM-DD hh:mm:ss'
+            format: 'YYYY-MM-DD HH:mm:ss'
         });
-        $("#available_until").datetimepicker({
+        $("#id_available_until").datetimepicker({
             defaultDate: until,
-            format: 'YYYY-MM-DD hh:mm:ss'
+            format: 'YYYY-MM-DD HH:mm:ss'
         });
 
         $("#id_supplies").val("{{ current_room.supplies|join:"," }}");

@@ -1,0 +1,169 @@
+{% extends 'meetings_management/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <!-- Bootstrap DateTime -->
+    <link href="{% static 'meetings_management/css/plugins/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Nueva solicitud
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-briefcase"></i> <a href="{% url 'app:requests' %}">Solicitudes</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-plus"></i> Nueva solicitud
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="col-lg-12 col-md-12">
+            <h1>Nueva solicitud</h1>
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    <strong>{{ error }}</strong>
+                </div>
+            {% endif %}
+
+            <form style="width: 60%;" role="form" action="{% url 'app:new-request' %}"
+                  method="POST"> {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {{ form.to_user.errors }}
+                    <label class="control-label" for="{{ form.to_user.id_for_label }}">Usuario</label>
+                    {{ form.to_user }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.reservation.errors }}
+                    <label class="control-label" for="{{ form.reservation.id_for_label }}">Reservación</label>
+                    {{ form.reservation }}
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <label for="{{ form.reserved_from.id_for_label }}" class="control-label">Reservar
+                                desde: </label>
+                            {{ form.reserved_from }}
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <label for="{{ form.reserved_until.id_for_label }}" class="control-label">hasta: </label>
+                            {{ form.reserved_until }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form.amount.errors }}
+                    <label for="{{ form.amount.id_for_label }}" class="control-label">Cantidad de personas</label>
+                    {{ form.amount }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.supplies.errors }}
+                    <label for="{{ form.supplies.id_for_label }}" class="control-label">Insumos</label>
+                    {{ form.supplies }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.message.errors }}
+                    <label class="control-label" for="{{ form.message.id_for_label }}">Mensaje</label>
+                    {{ form.message }}
+                </div>
+
+                <hr>
+
+                <button class="btn btn-primary" type="submit">Agregar</button>
+            </form>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block scripts %}
+    <!-- Load MomentJS -->
+    <script src="{% static 'meetings_management/js/plugins/moment.min.js' %}"></script>
+
+    <!-- Boostrap Datetime -->
+    <script src="{% static 'meetings_management/js/plugins/bootstrap-datetimepicker.min.js' %}"></script>
+
+    <script>
+        var from = moment().hours(6).minutes(0).seconds(0);
+        var until = moment().hours(8).minutes(0).seconds(0);
+
+        $("#id_reserved_from").datetimepicker({
+            defaultDate: from,
+            format: 'YYYY-MM-DD HH:mm:ss'
+        });
+        $("#id_reserved_until").datetimepicker({
+            defaultDate: until,
+            format: 'YYYY-MM-DD HH:mm:ss'
+        });
+
+        $("#id_to_user").find('option').each(function (opt) {
+            if ("{{ pk }}" === $(this).val()) {
+                $(this).remove();
+            }
+        });
+
+        var reservationList = JSON.parse("{{ reservations|escapejs }}");
+
+        $('#id_reservation').find('option').remove().end();
+        $('#id_reservation')
+            .append($("<option></option>")
+                .text('---------'));
+
+        $("#id_to_user").on('change', function (e) {
+            if (e.target.value) {
+                var reservations = reservationList.filter(function (s) {
+                    return s.user === e.target.value;
+                });
+
+                if (reservations.length > 0) {
+                    $.each(reservations, function (key, value) {
+                        $('#id_reservation')
+                            .append($("<option></option>")
+                                .attr("value", value.pk).text(value.name));
+                    });
+                }
+            }
+        });
+
+        $("#id_reservation").on('change', function (e) {
+            if (e.target.value) {
+                var reservation = reservationList.filter(function (r) {
+                    return r.pk == e.target.value;
+                });
+
+                if (reservation.length > 0) {
+                    $('#id_supplies').find('option').remove().end();
+                    $.each(reservation[0].supplies, function (key, value) {
+                        $('#id_supplies')
+                            .append($("<option></option>")
+                                .attr("value", value).text(value));
+                    });
+
+                    var from = moment(reservation[0].reserved_from);
+                    var until = moment(reservation[0].reserved_until);
+
+                    $("#id_reserved_from").val(from.format('YYYY-MM-DD HH:mm:ss'));
+
+                    $("#id_reserved_until").val(until.format('YYYY-MM-DD HH:mm:ss'));
+                }
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'meetings_management/base.html' %}
+
+{% block content %}
+    <div style="height: 100%" class="container-fluid text-center">
+        <form method="post">{% csrf_token %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    ¿Estás seguro que deseas eliminar el salón "{{ object }}"?
+                </div>
+                <div class="panel-body">
+                    <a href="{% url 'app:edit-meeting-room' object.pk %}" class="btn btn-danger">Cancelar</a>
+                    <input class="btn btn-success" type="submit" value="Eliminar"/>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

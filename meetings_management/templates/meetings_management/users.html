@@ -1,7 +1,7 @@
 {% extends 'meetings_management/base.html' %}
 
 {% block content %}
-<div class="container-fluid">
+    <div class="container-fluid">
         <!-- Page Heading -->
         <div class="row">
             <div class="col-lg-12">
@@ -15,5 +15,54 @@
                 </ol>
             </div>
         </div>
-</div>
+
+        {% if users.count > 0 %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><b>Usuarios activos</b></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Nombre de usuario</th>
+                                        <th>Nombre y apellido</th>
+                                        <th>Correo</th>
+                                        <th>Rol</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for user in users %}
+                                        <tr>
+                                            <td>
+                                                {{ user.user.username }}
+                                            </td>
+                                            <td>
+                                                {% if user.user.get_full_name %}
+                                                {{ user.user.get_full_name }}
+                                                {% else %}
+                                                    ------
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ user.user.email }}</td>
+                                            <td>{% if user.role == 0 %}
+                                                Empleado
+                                            {% else %}
+                                                Administrador
+                                            {% endif %}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        {% endif %}
+    </div>
 {% endblock %}
