@@ -28,7 +28,7 @@ class MeetingRoom(BaseMixin):
         verbose_name=_('supplies')
     )
 
-    def __str__(self):
+    def __unicode__(self):
         return "{} - {}".format(self.name, self.location)
 
     class Meta:
@@ -55,7 +55,7 @@ class MeetingRoomUser(BaseMixin):
         verbose_name=_('Role')
     )
 
-    def __str__(self):
+    def __unicode__(self):
         return "{} - {}".format(
             {
                 0: _("Employee"),
@@ -89,11 +89,15 @@ class MeetingRoomReservation(BaseMixin):
         verbose_name=_('supplies to use')
     )
 
-    def __str__(self):
-        return "{} - {} {}".format(
+    confirmed = models.BooleanField(
+        default=False,
+        verbose_name=_('reservation confirmed')
+    )
+
+    def __unicode__(self):
+        return "{} - {}".format(
             self.meeting_room.name,
-            self.user.user.first_name,
-            self.user.user.last_name
+            self.user.user.get_full_name() or self.user.user.username
         )
 
     class Meta:
@@ -102,24 +106,48 @@ class MeetingRoomReservation(BaseMixin):
 
 
 class MeetingRoomRequest(BaseMixin):
-    to_user = models.OneToOneField(
+    user = models.ForeignKey(
         'MeetingRoomUser',
-        related_name='user_requests'
+        related_name='requests'
     )
-    room = models.OneToOneField('MeetingRoom')
+
+    to_user = models.ForeignKey(
+        'MeetingRoomUser',
+        related_name='to_user_requests'
+    )
+
+    reservation = models.ForeignKey(
+        'MeetingRoomReservation'
+    )
+
     message = models.CharField(
         max_length=128,
         verbose_name=_('user message')
     )
 
-    def __str__(self):
-        return "{} {}, {} - {}".format(
-            self.to_user.user.first_name,
-            self.to_user.user.last_name,
-            self.room.name,
-            self.created
+    reserved_from = models.DateTimeField(
+        verbose_name=_('need to reserve from')
+    )
+
+    reserved_until = models.DateTimeField(
+        verbose_name=_('need to reserve until')
+    )
+
+    amount = models.IntegerField(verbose_name=_('amount of people'))
+
+    supplies = ArrayField(
+        models.CharField(max_length=64),
+        blank=True,
+        verbose_name=_('supplies to use')
+    )
+
+    def __unicode__(self):
+        return "{}, {}".format(
+            self.to_user.user.get_full_name() or self.to_user.user.username,
+            self.created.strftime('%d/%m/%y %H:%M:%S')
         )
 
     class Meta:
         verbose_name = _('user request')
         verbose_name_plural = _('user requests')
+        unique_together = (('to_user', 'reservation'),)
