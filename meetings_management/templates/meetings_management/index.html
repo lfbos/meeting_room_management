@@ -1,4 +1,15 @@
 {% extends 'meetings_management/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <link href="{% static 'meetings_management/css/plugins/jquery.qtip.min.css' %}" rel="stylesheet">
+    <link href="{% static 'meetings_management/css/plugins/fullcalendar.min.css' %}" rel="stylesheet">
+    <style>
+        .fc-event-container {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
@@ -6,87 +17,84 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
-                    Salones
+                    Reservaciones
                 </h1>
                 <ol class="breadcrumb">
                     <li class="active">
-                        <i class="fa fa-briefcase"></i> Salones
+                        <i class="fa fa-calendar"></i> Reservaciones
                     </li>
                 </ol>
             </div>
         </div>
-        <!-- /.row -->
 
         <div class="row">
-            <div class="col-lg-3 col-md-3">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-info-circle fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge">{{ rooms.count }}</div>
-                                <div>Total de salones creados</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <a href="{% url 'app:new-meeting-room' %}" class="btn btn-success btn-block"><i class="fa fa-plus"></i>
-                    Añadir nuevo salón</a>
+            {% if role == 0 %}
+            <div class="col-lg-12">
+                <a href="{% url 'app:new-reservation' %}" class="btn btn-success">
+                    <i class="fa fa-plus-circle"></i> Añadir reservación
+                </a>
+            </div>
+            <hr>
+            {% endif %}
+            <div class="col-lg-12">
+                <div id="calendar"></div>
             </div>
         </div>
-        <!-- /.row -->
-
-        <hr>
-
-        {% if rooms.count > 0 %}
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><b>Salones creados</b></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Ubicación</th>
-                                        <th>Capacidad</th>
-                                        <th>Insumos</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for room in rooms %}
-                                        <tr>
-                                            <td>
-                                                <a class="btn btn-primary"
-                                                   href="{% url 'app:edit-meeting-room' room.pk %}">
-                                                    <i class="fa fa-edit"></i>
-                                                </a> {{ room.name }}
-                                            </td>
-                                            <td>{{ room.location }}</td>
-                                            <td>{{ room.capacity }}</td>
-                                            {% if room.supplies|length > 0 %}
-                                                <td>{{ room.supplies|join:", " }}</td>
-                                            {% else %}
-                                                <td>No posee insumos</td>
-                                            {% endif %}
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /.row -->
-        {% endif %}
-
     </div>
-    <!-- /.container-fluid -->
+{% endblock %}
 
+{% block scripts %}
+    <script src="{% static 'meetings_management/js/plugins/moment.min.js' %}"></script>
+    <script src="{% static 'meetings_management/js/plugins/jquery.qtip.min.js' %}"></script>
+    <script src="{% static 'meetings_management/js/plugins/fullcalendar.min.js' %}"></script>
+    <script src='{% static 'meetings_management/js/plugins/locale/es.js' %}'></script>
+
+    <script>
+        var reservations = JSON.parse("{{ reservations|escapejs}}");
+
+        $('#calendar').fullCalendar({
+            events: reservations.map(function (res) {
+                var title = res.room.name + ', ' + res.user;
+                var status = res.confirmed ? '<b>Confirmado para: </b>' : '<b>Reservador por: </b>';
+                var description = status + res.user +
+                    '.<br/> <b>Desde: </b>' + moment(res.reserved_from).format('DD/MM/YYYY hh:mm:ss a') +
+                    ',<br/> <b>Hasta: </b>' + moment(res.reserved_until).format('DD/MM/YYYY hh:mm:ss a') + '.';
+
+                return {
+                    pk: res.pk,
+                    title: title,
+                    description: description,
+                    start: res.reserved_from,
+                    end: res.reserved_until,
+                    color: res.confirmed ? '#59C6F7' : '#9BA1A3'
+                };
+            }),
+            locale: 'es',
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaDay'
+            },
+            dayClick: function (date) {
+                $('#calendar').fullCalendar('gotoDate', date);
+                $('#calendar').fullCalendar('changeView', 'agendaDay');
+            },
+            eventClick: function (event) {
+                if ("{{ role }}" === "1") {
+                    window.location = '/app/edit_reservation/' + event.pk;
+                }
+            },
+            eventRender: function (event, element) {
+                element.qtip({
+                    style: {
+                        classes: "qtip-bootstrap qtip-shadow"
+                    },
+                    content: {
+                        title: '<b>' + event.title + '</b>',
+                        text: '<p>' + event.description + '</p>'
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}
